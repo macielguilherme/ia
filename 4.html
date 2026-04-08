@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Docs - Indexação de Documento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS DA NAVBAR (mantido do original) --- */
+        body {
+            background-color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 1rem;
+            color: #212529;
+            padding-top: 40px;
+            margin: 0;
+        }
+
+        .topNav {
+            background: #2c363f;
+            background-image: linear-gradient(to bottom, #3c4852, #212a31);
+            display: block;
+            color: #eeeeee;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            height: 34px;
+            border-bottom: 1px solid #1c262b;
+        }
+
+        .wrapper {
+            position: relative;
+            margin: 0 3%;
+        }
+
+        .userNav {
+            float: right;
+            font-size: 11px;
+        }
+
+        .userNav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            border-right: 1px solid #39454f;
+        }
+
+        .userNav ul li {
+            border-left: 1px solid #39454f;
+            border-right: 1px solid #1c262b;
+            display: flex;
+            align-items: center;
+            height: 34px;
+        }
+
+        .userNav ul li span, .userNav ul li a {
+            padding: 0 15px;
+            color: #eee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .userNav ul li a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        /* --- ESTILOS DO CONTEÚDO --- */
+        .card {
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+            font-weight: 600;
+        }
+
+        /* Painel de visualização de documento */
+        .document-viewer {
+            background-color: #1e293b;
+            border-radius: .25rem;
+            min-height: 500px;
+            color: #e2e8f0;
+        }
+
+        .viewer-toolbar {
+            background-color: #0f172a;
+            padding: 10px 15px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .viewer-content {
+            padding: 0;
+            height: 500px;
+        }
+
+        .viewer-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 .25rem .25rem;
+        }
+
+        .btn-outline-light-custom {
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            background: transparent;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+
+        .btn-outline-light-custom:hover {
+            background-color: #334155;
+        }
+
+        /* Etapas de navegação */
+        .step-indicator {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 0;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .step.active {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .step.completed {
+            color: #28a745;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #e9ecef;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .step.active .step-number {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .step.completed .step-number {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        /* Badge de tipo */
+        .badge-tipo {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        /* Barra de progresso */
+        .progress-custom {
+            height: 6px;
+            background-color: #e9ecef;
+            border-radius: 3px;
+            margin-top: 8px;
+        }
+
+        .progress-bar-custom {
+            width: 38%;
+            height: 6px;
+            background-color: #007bff;
+            border-radius: 3px;
+        }
+
+        /* Botão IA */
+        .btn-ia {
+            background-color: #e8f4ff;
+            border: 1px solid #007bff;
+            color: #007bff;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+
+        .btn-ia:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Campos obrigatórios */
+        .required:after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        /* Rodapé do formulário */
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .btn-skip {
+            background-color: #9E9E9E;
+            border-color: #827f7f;
+            border: none;
+            padding: 6px 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            border-color: #28a745;
+            border: none;
+            padding: 6px 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+
+        /* Linha superior com tipo e etapas */
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* Loader IA */
+        .ia-loader {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        .ia-loader img {
+            width: 20px;
+            height: 20px;
+        }
+        .ia-loader span {
+            font-size: 0.75rem;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topNav">
+    <div class="wrapper">
+        <div class="userNav">
+            <ul>
+                <li><span><strong>Demo</strong></span></li>
+                <li><span><strong>99999 | Demonstração</strong></span></li>
+                <li>
+                    <a href="#" title="Minha Conta">
+                        <i class="fas fa-user"></i>
+                        <span class="ml-1">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="2.html" title="Voltar">
+                        <i class="fas fa-reply"></i>
+                        <span class="ml-1">Voltar para Fila</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" title="Sair">
+                        <i class="fas fa-share"></i>
+                        <span class="ml-1">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="container-fluid pt-2">
+    <!-- Card de informações do fluxo -->
+    <div class="card">
+        <div class="card-header" id="headingOne" role="tab">
+            <h5 class="mb-0">
+                <button class="btn btn-link" type="button" id="botao" style="text-decoration: none; color: #007bff; width: 100%; text-align: left;">
+                    <label class="mb-0">Fluxo: </label> <span id="titulo">Indexação de Documento</span>
+                    <label class="mb-0 ml-2">| Indexador: </label> <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    <label class="mb-0 ml-2">| Documento: </label> <span id="nomeDocumento">decreto_4587_2026.pdf</span>
+                    <i class="fa fa-angle-double-down float-right"></i>
+                </button>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="card-group">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Total na fila</label><br>
+                        <label class="font-weight-bold h4">8</label>
+                    </div>
+                </div>
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Pendentes</label><br>
+                        <label class="font-weight-bold h4">7</label>
+                    </div>
+                </div>
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Indexados</label><br>
+                        <label class="font-weight-bold h4">1</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Lado Esquerdo: Painel de Visualização do Documento -->
+        <div class="col-md-6 pb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-file-pdf mr-2"></i> Visualizador de Documento
+                </div>
+                <div class="card-body p-0">
+                    <div class="document-viewer">
+                        <div class="viewer-toolbar">
+                            <span class="small">
+                                <i class="fas fa-file mr-1"></i> decreto_4587_2026.pdf
+                            </span>
+                            <div>
+                                <button class="btn-outline-light-custom" id="btnAbrirPDF">
+                                    <i class="fas fa-folder-open"></i> Abrir PDF
+                                </button>
+                            </div>
+                        </div>
+                        <div class="viewer-content">
+                            <iframe src="1.pdf" id="pdfFrame"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lado Direito: Painel de Indexação e Formulário -->
+        <div class="col-md-6 pb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <!-- Linha superior com tipo Decreto e etapas -->
+                    <div class="top-row">
+                        <span class="badge-tipo">Decreto</span>
+                        <div class="step-indicator">
+                            <div class="step active">
+                                <span class="step-number">1</span>
+                                <span>Preencher</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span>Revisar</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">3</span>
+                                <span>Salvo</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de progresso com porcentagem -->
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="small text-muted">Progresso do preenchimento</span>
+                        <span class="small text-muted" id="percentualProgresso">0%</span>
+                    </div>
+                    <div class="progress-custom">
+                        <div class="progress-bar-custom"></div>
+                    </div>
+
+                    <!-- Informações de Contexto e IA -->
+                    <div class="mt-3 mb-3 p-2" style="background-color: #f8f9fa; border-radius: .25rem;">
+                        <div class="row small">
+                            <div class="col-4"><strong>Esfera:</strong> Distrital</div>
+                            <div class="col-4"><strong>Situação:</strong> Vigente</div>
+                            <div class="col-4"><strong>Diário Oficial:</strong> DODF</div>
+                        </div>
+                        <hr class="my-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">IA disponível para extração automática</span>
+                            <button class="btn-ia" id="btnExtrairIA">
+                                Extrair com IA
+                            </button>
+                        </div>
+                        <div id="iaLoader" class="ia-loader">
+                            <img src="https://docz.sosdocs.com.br/Docz/images/loaders/loader9.gif" alt="loading">
+                            <span>Docling processando documento...</span>
+                        </div>
+                    </div>
+
+                    <!-- Formulário de Dados -->
+                    <form id="formIndexacao">
+                        <div class="form-group">
+                            <label class="required">Nº Decreto</label>
+                            <input type="text" class="form-control" id="numDecreto" placeholder="Ex: 4587/2026">
+                            <small class="form-text text-muted">Formato: NNNN/AAAA</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Data de Publicação</label>
+                            <input type="date" class="form-control" id="dataPublicacao">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Órgão Emissor</label>
+                            <input type="text" class="form-control" id="orgaoEmissor" value="Governador do Distrito Federal">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="required">Assunto</label>
+                            <textarea rows="3" class="form-control" id="assunto" maxlength="500"></textarea>
+                            <small class="form-text text-muted"><span id="charCount">0</span>/500 caracteres</small>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="required">Esfera</label>
+                                <select class="form-control" id="esfera">
+                                    <option selected>Distrital</option>
+                                    <option>Federal</option>
+                                    <option>Municipal</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label class="required">Situação</label>
+                                <select class="form-control" id="situacao">
+                                    <option selected>Vigente</option>
+                                    <option>Revogado</option>
+                                    <option>Alterado</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label>Página D.O.</label>
+                                <input type="number" class="form-control" id="paginaDO" placeholder="Nº da página">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Diário Oficial</label>
+                            <input type="text" class="form-control" id="diarioOficial" value="Diário Oficial do Distrito Federal (DODF)">
+                        </div>
+
+                        <!-- Rodapé do Formulário -->
+                        <div class="form-footer">
+                            <div class="small text-muted">
+                                <i class="fas fa-check-circle text-success mr-1"></i> <span id="camposPreenchidos">3</span>/8 campos preenchidos
+                            </div>
+                            <div>
+                                <button type="button" class="btn-skip" id="btnPular">
+                                    Pular
+                                </button>
+                                <button type="submit" class="btn-save ml-2" id="btnSalvar">
+                                    Salvar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Contagem de caracteres do assunto
+    const assuntoField = document.getElementById('assunto');
+    const charCountSpan = document.getElementById('charCount');
+    
+    assuntoField.addEventListener('input', function() {
+        charCountSpan.innerText = this.value.length;
+    });
+
+    // Contagem de campos preenchidos
+    const campos = ['numDecreto', 'dataPublicacao', 'orgaoEmissor', 'assunto', 'esfera', 'situacao', 'paginaDO', 'diarioOficial'];
+    const camposPreenchidosSpan = document.getElementById('camposPreenchidos');
+    const percentualSpan = document.getElementById('percentualProgresso');
+    
+    function atualizarContagemCampos() {
+        let preenchidos = 0;
+        if (document.getElementById('numDecreto').value.trim() !== '') preenchidos++;
+        if (document.getElementById('dataPublicacao').value !== '') preenchidos++;
+        if (document.getElementById('orgaoEmissor').value.trim() !== '') preenchidos++;
+        if (document.getElementById('assunto').value.trim() !== '') preenchidos++;
+        if (document.getElementById('esfera').value !== '') preenchidos++;
+        if (document.getElementById('situacao').value !== '') preenchidos++;
+        if (document.getElementById('paginaDO').value !== '') preenchidos++;
+        if (document.getElementById('diarioOficial').value.trim() !== '') preenchidos++;
+        
+        camposPreenchidosSpan.innerText = preenchidos;
+        
+        // Atualizar barra de progresso
+        const percentual = Math.round((preenchidos / 8) * 100);
+        document.querySelector('.progress-bar-custom').style.width = percentual + '%';
+        percentualSpan.innerText = percentual + '%';
+    }
+    
+    // Adicionar eventos para todos os campos
+    campos.forEach(campoId => {
+        const campo = document.getElementById(campoId);
+        if (campo) {
+            campo.addEventListener('input', atualizarContagemCampos);
+            campo.addEventListener('change', atualizarContagemCampos);
+        }
+    });
+    
+    // Extrair com IA
+    const btnExtrairIA = document.getElementById('btnExtrairIA');
+    const iaLoader = document.getElementById('iaLoader');
+    
+    btnExtrairIA.addEventListener('click', function() {
+        // Desabilita o botão e mostra loader
+        btnExtrairIA.disabled = true;
+        iaLoader.style.display = 'flex';
+        
+        // Simular delay de 2 segundos
+        setTimeout(function() {
+            // Preencher campos com os dados extraídos
+            document.getElementById('numDecreto').value = '4587/2026';
+            document.getElementById('dataPublicacao').value = '2026-03-15';
+            document.getElementById('orgaoEmissor').value = 'Governador do Distrito Federal';
+            document.getElementById('assunto').value = 'Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.';
+            document.getElementById('esfera').value = 'Distrital';
+            document.getElementById('situacao').value = 'Vigente';
+            document.getElementById('paginaDO').value = '12';
+            document.getElementById('diarioOficial').value = 'Diário Oficial do Distrito Federal (DODF)';
+            
+            // Atualizar contagens
+            atualizarContagemCampos();
+            charCountSpan.innerText = document.getElementById('assunto').value.length;
+            
+            // Esconder loader e reabilitar botão
+            iaLoader.style.display = 'none';
+            btnExtrairIA.disabled = false;
+        }, 2000);
+    });
+    
+    // Abrir PDF (simulado - carrega arquivo local)
+    document.getElementById('btnAbrirPDF').addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/pdf';
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.getElementById('pdfFrame').src = url;
+            }
+        };
+        input.click();
+    });
+    
+    // Pular documento
+    document.getElementById('btnPular').addEventListener('click', function() {
+        if (confirm('Deseja pular este documento? Ele voltará para o final da fila.')) {
+            window.location.href = '2.html';
+        }
+    });
+    
+    // Salvar formulário
+    document.getElementById('formIndexacao').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validação básica
+        if (!document.getElementById('numDecreto').value.trim()) {
+            alert('Por favor, preencha o Nº Decreto');
+            document.getElementById('numDecreto').focus();
+            return;
+        }
+        if (!document.getElementById('dataPublicacao').value) {
+            alert('Por favor, preencha a Data de Publicação');
+            document.getElementById('dataPublicacao').focus();
+            return;
+        }
+        
+        alert('Documento indexado com sucesso! Redirecionando para a fila...');
+        window.location.href = '2.html';
+    });
+    
+    // Inicializar contagem
+    atualizarContagemCampos();
+</script>
+
+</body>
+</html>
