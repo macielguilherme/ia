@@ -93,7 +93,7 @@
         .document-viewer {
             background-color: #1e293b;
             border-radius: .25rem;
-            min-height: 500px;
+            min-height: 100%;
             color: #e2e8f0;
         }
 
@@ -109,7 +109,7 @@
 
         .viewer-content {
             padding: 0;
-            height: 500px;
+            height: 600px;
         }
 
         .viewer-content iframe {
@@ -282,6 +282,55 @@
             font-size: 0.75rem;
             color: #007bff;
         }
+
+        /* Mensagem de confiança da IA */
+        .ia-message {
+            display: none;
+            background-color: #e8f5e9;
+            border-left: 3px solid #28a745;
+            padding: 6px 10px;
+            border-radius: .25rem;
+            margin-top: 5px;
+        }
+        .ia-message span {
+            font-size: 0.7rem;
+            color: #2e7d32;
+        }
+
+        /* Campo com percentual de confiança */
+        .field-confidence {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2px;
+        }
+        .confidence-badge {
+            font-size: 0.65rem;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        /* Altura igual para os cards */
+        .equal-height {
+            height: 100%;
+        }
+        
+        /* Mensagem de sucesso ao salvar */
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: .25rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -314,6 +363,10 @@
         </div>
         <div class="clearfix"></div>
     </div>
+</div>
+
+<div class="success-message" id="successMessage">
+    Indexado com sucesso!
 </div>
 
 <div class="container-fluid pt-2">
@@ -356,12 +409,12 @@
     <div class="row">
         <!-- Lado Esquerdo: Painel de Visualização do Documento -->
         <div class="col-md-6 pb-4">
-            <div class="card h-100">
+            <div class="card h-100 equal-height">
                 <div class="card-header">
                     <i class="fas fa-file-pdf mr-2"></i> Visualizador de Documento
                 </div>
                 <div class="card-body p-0">
-                    <div class="document-viewer">
+                    <div class="document-viewer" style="min-height: 600px;">
                         <div class="viewer-toolbar">
                             <span class="small">
                                 <i class="fas fa-file mr-1"></i> decreto_4587_2026.pdf
@@ -382,7 +435,7 @@
 
         <!-- Lado Direito: Painel de Indexação e Formulário -->
         <div class="col-md-6 pb-4">
-            <div class="card h-100">
+            <div class="card h-100 equal-height">
                 <div class="card-body">
                     <!-- Linha superior com tipo Decreto e etapas -->
                     <div class="top-row">
@@ -430,35 +483,53 @@
                             <img src="https://docz.sosdocs.com.br/Docz/images/loaders/loader9.gif" alt="loading">
                             <span>Docling processando documento...</span>
                         </div>
+                        <div id="iaMessage" class="ia-message">
+                            <span id="iaMessageText"></span>
+                        </div>
                     </div>
 
                     <!-- Formulário de Dados -->
                     <form id="formIndexacao">
                         <div class="form-group">
-                            <label class="required">Nº Decreto</label>
+                            <div class="field-confidence">
+                                <label class="required">Nº Decreto</label>
+                                <span class="confidence-badge" id="confNumDecreto"></span>
+                            </div>
                             <input type="text" class="form-control" id="numDecreto" placeholder="Ex: 4587/2026">
                             <small class="form-text text-muted">Formato: NNNN/AAAA</small>
                         </div>
 
                         <div class="form-group">
-                            <label class="required">Data de Publicação</label>
+                            <div class="field-confidence">
+                                <label class="required">Data de Publicação</label>
+                                <span class="confidence-badge" id="confDataPublicacao"></span>
+                            </div>
                             <input type="date" class="form-control" id="dataPublicacao">
                         </div>
 
                         <div class="form-group">
-                            <label class="required">Órgão Emissor</label>
+                            <div class="field-confidence">
+                                <label class="required">Órgão Emissor</label>
+                                <span class="confidence-badge" id="confOrgaoEmissor"></span>
+                            </div>
                             <input type="text" class="form-control" id="orgaoEmissor" value="Governador do Distrito Federal">
                         </div>
 
                         <div class="form-group">
-                            <label class="required">Assunto</label>
+                            <div class="field-confidence">
+                                <label class="required">Assunto</label>
+                                <span class="confidence-badge" id="confAssunto"></span>
+                            </div>
                             <textarea rows="3" class="form-control" id="assunto" maxlength="500"></textarea>
                             <small class="form-text text-muted"><span id="charCount">0</span>/500 caracteres</small>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-4">
-                                <label class="required">Esfera</label>
+                                <div class="field-confidence">
+                                    <label class="required">Esfera</label>
+                                    <span class="confidence-badge" id="confEsfera"></span>
+                                </div>
                                 <select class="form-control" id="esfera">
                                     <option selected>Distrital</option>
                                     <option>Federal</option>
@@ -466,7 +537,10 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label class="required">Situação</label>
+                                <div class="field-confidence">
+                                    <label class="required">Situação</label>
+                                    <span class="confidence-badge" id="confSituacao"></span>
+                                </div>
                                 <select class="form-control" id="situacao">
                                     <option selected>Vigente</option>
                                     <option>Revogado</option>
@@ -474,13 +548,19 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <label>Página D.O.</label>
+                                <div class="field-confidence">
+                                    <label>Página D.O.</label>
+                                    <span class="confidence-badge" id="confPaginaDO"></span>
+                                </div>
                                 <input type="number" class="form-control" id="paginaDO" placeholder="Nº da página">
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>Diário Oficial</label>
+                            <div class="field-confidence">
+                                <label>Diário Oficial</label>
+                                <span class="confidence-badge" id="confDiarioOficial"></span>
+                            </div>
                             <input type="text" class="form-control" id="diarioOficial" value="Diário Oficial do Distrito Federal (DODF)">
                         </div>
 
@@ -532,7 +612,6 @@
         
         camposPreenchidosSpan.innerText = preenchidos;
         
-        // Atualizar barra de progresso
         const percentual = Math.round((preenchidos / 8) * 100);
         document.querySelector('.progress-bar-custom').style.width = percentual + '%';
         percentualSpan.innerText = percentual + '%';
@@ -547,38 +626,68 @@
         }
     });
     
+    // Limpar badges de confiança
+    function limparBadgesConfianca() {
+        const badges = ['confNumDecreto', 'confDataPublicacao', 'confOrgaoEmissor', 'confAssunto', 'confEsfera', 'confSituacao', 'confPaginaDO', 'confDiarioOficial'];
+        badges.forEach(id => {
+            document.getElementById(id).innerHTML = '';
+        });
+    }
+    
     // Extrair com IA
     const btnExtrairIA = document.getElementById('btnExtrairIA');
     const iaLoader = document.getElementById('iaLoader');
+    const iaMessage = document.getElementById('iaMessage');
+    const iaMessageText = document.getElementById('iaMessageText');
     
     btnExtrairIA.addEventListener('click', function() {
-        // Desabilita o botão e mostra loader
         btnExtrairIA.disabled = true;
         iaLoader.style.display = 'flex';
+        iaMessage.style.display = 'none';
+        limparBadgesConfianca();
         
-        // Simular delay de 2 segundos
         setTimeout(function() {
-            // Preencher campos com os dados extraídos
-            document.getElementById('numDecreto').value = '4587/2026';
-            document.getElementById('dataPublicacao').value = '2026-03-15';
-            document.getElementById('orgaoEmissor').value = 'Governador do Distrito Federal';
-            document.getElementById('assunto').value = 'Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.';
-            document.getElementById('esfera').value = 'Distrital';
-            document.getElementById('situacao').value = 'Vigente';
-            document.getElementById('paginaDO').value = '12';
-            document.getElementById('diarioOficial').value = 'Diário Oficial do Distrito Federal (DODF)';
+            const dadosIA = {
+                numDecreto: { valor: '4587/2026', confianca: 97 },
+                dataPublicacao: { valor: '2026-03-15', confianca: 99 },
+                orgaoEmissor: { valor: 'Governo do Distrito Federal', confianca: 95 },
+                assunto: { valor: 'Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.', confianca: 88 },
+                esfera: { valor: 'Distrital', confianca: 99 },
+                situacao: { valor: 'Vigente', confianca: 92 },
+                paginaDO: { valor: '12', confianca: 78 },
+                diarioOficial: { valor: 'Diário Oficial do Distrito Federal (DODF)', confianca: 94 }
+            };
             
-            // Atualizar contagens
+            document.getElementById('numDecreto').value = dadosIA.numDecreto.valor;
+            document.getElementById('dataPublicacao').value = dadosIA.dataPublicacao.valor;
+            document.getElementById('orgaoEmissor').value = dadosIA.orgaoEmissor.valor;
+            document.getElementById('assunto').value = dadosIA.assunto.valor;
+            document.getElementById('esfera').value = dadosIA.esfera.valor;
+            document.getElementById('situacao').value = dadosIA.situacao.valor;
+            document.getElementById('paginaDO').value = dadosIA.paginaDO.valor;
+            document.getElementById('diarioOficial').value = dadosIA.diarioOficial.valor;
+            
+            document.getElementById('confNumDecreto').innerHTML = `${dadosIA.numDecreto.confianca}%`;
+            document.getElementById('confDataPublicacao').innerHTML = `${dadosIA.dataPublicacao.confianca}%`;
+            document.getElementById('confOrgaoEmissor').innerHTML = `${dadosIA.orgaoEmissor.confianca}%`;
+            document.getElementById('confAssunto').innerHTML = `${dadosIA.assunto.confianca}%`;
+            document.getElementById('confEsfera').innerHTML = `${dadosIA.esfera.confianca}%`;
+            document.getElementById('confSituacao').innerHTML = `${dadosIA.situacao.confianca}%`;
+            document.getElementById('confPaginaDO').innerHTML = `${dadosIA.paginaDO.confianca}%`;
+            document.getElementById('confDiarioOficial').innerHTML = `${dadosIA.diarioOficial.confianca}%`;
+            
+            charCountSpan.innerText = dadosIA.assunto.valor.length;
             atualizarContagemCampos();
-            charCountSpan.innerText = document.getElementById('assunto').value.length;
             
-            // Esconder loader e reabilitar botão
+            iaMessageText.innerHTML = 'IA extraiu campos — revise e confirme | Confiança média: 93%';
+            iaMessage.style.display = 'block';
+            
             iaLoader.style.display = 'none';
             btnExtrairIA.disabled = false;
         }, 2000);
     });
     
-    // Abrir PDF (simulado - carrega arquivo local)
+    // Abrir PDF
     document.getElementById('btnAbrirPDF').addEventListener('click', function() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -600,11 +709,27 @@
         }
     });
     
+    // Função para resetar o formulário
+    function resetarFormulario() {
+        document.getElementById('numDecreto').value = '';
+        document.getElementById('dataPublicacao').value = '';
+        document.getElementById('orgaoEmissor').value = 'Governador do Distrito Federal';
+        document.getElementById('assunto').value = '';
+        document.getElementById('esfera').value = 'Distrital';
+        document.getElementById('situacao').value = 'Vigente';
+        document.getElementById('paginaDO').value = '';
+        document.getElementById('diarioOficial').value = 'Diário Oficial do Distrito Federal (DODF)';
+        
+        limparBadgesConfianca();
+        iaMessage.style.display = 'none';
+        charCountSpan.innerText = '0';
+        atualizarContagemCampos();
+    }
+    
     // Salvar formulário
     document.getElementById('formIndexacao').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Validação básica
         if (!document.getElementById('numDecreto').value.trim()) {
             alert('Por favor, preencha o Nº Decreto');
             document.getElementById('numDecreto').focus();
@@ -616,8 +741,17 @@
             return;
         }
         
-        alert('Documento indexado com sucesso! Redirecionando para a fila...');
-        window.location.href = '2.html';
+        // Mostrar mensagem de sucesso
+        const successMsg = document.getElementById('successMessage');
+        successMsg.style.display = 'block';
+        
+        // Resetar formulário
+        resetarFormulario();
+        
+        // Após 2 segundos, redirecionar para 4_2.html
+        setTimeout(function() {
+            window.location.href = '4_2.html';
+        }, 2000);
     });
     
     // Inicializar contagem
