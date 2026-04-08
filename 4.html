@@ -306,8 +306,16 @@
         }
         .confidence-badge {
             font-size: 0.65rem;
-            color: #28a745;
             font-weight: 500;
+        }
+        .confidence-badge.high {
+            color: #28a745;
+        }
+        .confidence-badge.medium {
+            color: #ffc107;
+        }
+        .confidence-badge.low {
+            color: #dc3545;
         }
 
         /* Altura igual para os cards */
@@ -586,6 +594,21 @@
 </div>
 
 <script>
+    // Função para definir a cor do badge baseada na confiança
+    function getConfidenceClass(confianca) {
+        if (confianca >= 90) return 'high';
+        if (confianca >= 80) return 'medium';
+        return 'low';
+    }
+    
+    // Função para aplicar badge com cor
+    function setConfidenceBadge(elementId, confianca) {
+        const element = document.getElementById(elementId);
+        const confidenceClass = getConfidenceClass(confianca);
+        element.className = `confidence-badge ${confidenceClass}`;
+        element.innerHTML = `${confianca}%`;
+    }
+    
     // Contagem de caracteres do assunto
     const assuntoField = document.getElementById('assunto');
     const charCountSpan = document.getElementById('charCount');
@@ -630,7 +653,9 @@
     function limparBadgesConfianca() {
         const badges = ['confNumDecreto', 'confDataPublicacao', 'confOrgaoEmissor', 'confAssunto', 'confEsfera', 'confSituacao', 'confPaginaDO', 'confDiarioOficial'];
         badges.forEach(id => {
-            document.getElementById(id).innerHTML = '';
+            const element = document.getElementById(id);
+            element.className = 'confidence-badge';
+            element.innerHTML = '';
         });
     }
     
@@ -667,14 +692,14 @@
             document.getElementById('paginaDO').value = dadosIA.paginaDO.valor;
             document.getElementById('diarioOficial').value = dadosIA.diarioOficial.valor;
             
-            document.getElementById('confNumDecreto').innerHTML = `${dadosIA.numDecreto.confianca}%`;
-            document.getElementById('confDataPublicacao').innerHTML = `${dadosIA.dataPublicacao.confianca}%`;
-            document.getElementById('confOrgaoEmissor').innerHTML = `${dadosIA.orgaoEmissor.confianca}%`;
-            document.getElementById('confAssunto').innerHTML = `${dadosIA.assunto.confianca}%`;
-            document.getElementById('confEsfera').innerHTML = `${dadosIA.esfera.confianca}%`;
-            document.getElementById('confSituacao').innerHTML = `${dadosIA.situacao.confianca}%`;
-            document.getElementById('confPaginaDO').innerHTML = `${dadosIA.paginaDO.confianca}%`;
-            document.getElementById('confDiarioOficial').innerHTML = `${dadosIA.diarioOficial.confianca}%`;
+            setConfidenceBadge('confNumDecreto', dadosIA.numDecreto.confianca);
+            setConfidenceBadge('confDataPublicacao', dadosIA.dataPublicacao.confianca);
+            setConfidenceBadge('confOrgaoEmissor', dadosIA.orgaoEmissor.confianca);
+            setConfidenceBadge('confAssunto', dadosIA.assunto.confianca);
+            setConfidenceBadge('confEsfera', dadosIA.esfera.confianca);
+            setConfidenceBadge('confSituacao', dadosIA.situacao.confianca);
+            setConfidenceBadge('confPaginaDO', dadosIA.paginaDO.confianca);
+            setConfidenceBadge('confDiarioOficial', dadosIA.diarioOficial.confianca);
             
             charCountSpan.innerText = dadosIA.assunto.valor.length;
             atualizarContagemCampos();
