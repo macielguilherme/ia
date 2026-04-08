@@ -323,21 +323,58 @@
             height: 100%;
         }
         
-        /* Mensagem de sucesso ao salvar */
-        .success-message {
+        /* Modal de sucesso */
+        .success-modal {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #28a745;
-            color: white;
-            padding: 15px 30px;
-            border-radius: .25rem;
-            font-weight: 600;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-content {
+            background-color: #fff;
+            border-radius: .5rem;
+            padding: 40px 60px;
+            text-align: center;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            font-size: 1rem;
+            animation: fadeInUp 0.3s ease;
+        }
+        .success-content .check-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+        .success-content .check-circle i {
+            font-size: 40px;
+            color: white;
+        }
+        .success-content h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        .success-content p {
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -373,8 +410,15 @@
     </div>
 </div>
 
-<div class="success-message" id="successMessage">
-    Indexado com sucesso!
+<!-- Modal de sucesso -->
+<div id="successModal" class="success-modal">
+    <div class="success-content">
+        <div class="check-circle">
+            <i class="fas fa-check"></i>
+        </div>
+        <h4>Indexado com Sucesso!</h4>
+        <p>O documento foi indexado com sucesso.</p>
+    </div>
 </div>
 
 <div class="container-fluid pt-2">
@@ -659,6 +703,24 @@
         });
     }
     
+    // Limpar todos os campos do formulário
+    function limparFormulario() {
+        document.getElementById('numDecreto').value = '';
+        document.getElementById('dataPublicacao').value = '';
+        document.getElementById('orgaoEmissor').value = 'Governador do Distrito Federal';
+        document.getElementById('assunto').value = '';
+        document.getElementById('esfera').value = 'Distrital';
+        document.getElementById('situacao').value = 'Vigente';
+        document.getElementById('paginaDO').value = '';
+        document.getElementById('diarioOficial').value = 'Diário Oficial do Distrito Federal (DODF)';
+        
+        limparBadgesConfianca();
+        const iaMessage = document.getElementById('iaMessage');
+        iaMessage.style.display = 'none';
+        charCountSpan.innerText = '0';
+        atualizarContagemCampos();
+    }
+    
     // Extrair com IA
     const btnExtrairIA = document.getElementById('btnExtrairIA');
     const iaLoader = document.getElementById('iaLoader');
@@ -712,7 +774,7 @@
         }, 2000);
     });
     
-    // Abrir PDF - usando o visualizador padrão do Google
+    // Abrir PDF
     document.getElementById('btnAbrirPDF').addEventListener('click', function() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -734,23 +796,6 @@
         }
     });
     
-    // Função para resetar o formulário
-    function resetarFormulario() {
-        document.getElementById('numDecreto').value = '';
-        document.getElementById('dataPublicacao').value = '';
-        document.getElementById('orgaoEmissor').value = 'Governador do Distrito Federal';
-        document.getElementById('assunto').value = '';
-        document.getElementById('esfera').value = 'Distrital';
-        document.getElementById('situacao').value = 'Vigente';
-        document.getElementById('paginaDO').value = '';
-        document.getElementById('diarioOficial').value = 'Diário Oficial do Distrito Federal (DODF)';
-        
-        limparBadgesConfianca();
-        iaMessage.style.display = 'none';
-        charCountSpan.innerText = '0';
-        atualizarContagemCampos();
-    }
-    
     // Salvar formulário
     document.getElementById('formIndexacao').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -766,18 +811,27 @@
             return;
         }
         
-        // Mostrar mensagem de sucesso
-        const successMsg = document.getElementById('successMessage');
-        successMsg.style.display = 'block';
+        // Limpar formulário (apagar tudo da tela)
+        limparFormulario();
         
-        // Resetar formulário
-        resetarFormulario();
+        // Mostrar modal de sucesso
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'flex';
         
-        // Após 2 segundos, redirecionar para 4_2.html
+        // Após 2 segundos, fechar modal e redirecionar
         setTimeout(function() {
+            modal.style.display = 'none';
             window.location.href = '4_2.html';
         }, 2000);
     });
+    
+    // Fechar modal se clicar fora
+    window.onclick = function(event) {
+        const modal = document.getElementById('successModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
     
     // Inicializar contagem
     atualizarContagemCampos();
