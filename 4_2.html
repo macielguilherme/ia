@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Docs - Revisão de Indexação</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS DA NAVBAR (mantido do original) --- */
+        body {
+            background-color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 1rem;
+            color: #212529;
+            padding-top: 40px;
+            margin: 0;
+        }
+
+        .topNav {
+            background: #2c363f;
+            background-image: linear-gradient(to bottom, #3c4852, #212a31);
+            display: block;
+            color: #eeeeee;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            height: 34px;
+            border-bottom: 1px solid #1c262b;
+        }
+
+        .wrapper {
+            position: relative;
+            margin: 0 3%;
+        }
+
+        .userNav {
+            float: right;
+            font-size: 11px;
+        }
+
+        .userNav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            border-right: 1px solid #39454f;
+        }
+
+        .userNav ul li {
+            border-left: 1px solid #39454f;
+            border-right: 1px solid #1c262b;
+            display: flex;
+            align-items: center;
+            height: 34px;
+        }
+
+        .userNav ul li span, .userNav ul li a {
+            padding: 0 15px;
+            color: #eee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .userNav ul li a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        /* --- ESTILOS DO CONTEÚDO --- */
+        .card {
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+            font-weight: 600;
+        }
+
+        .badge-tipo {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .confidence-badge {
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+        .confidence-badge.high { color: #28a745; }
+        .confidence-badge.medium { color: #ffc107; }
+        .confidence-badge.low { color: #dc3545; }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .info-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .info-value {
+            font-weight: 500;
+            font-size: 0.85rem;
+            flex: 1;
+            margin-left: 15px;
+        }
+        .info-confidence {
+            font-size: 0.7rem;
+            min-width: 45px;
+            text-align: right;
+        }
+
+        .summary-card {
+            background-color: #f8f9fa;
+            border-radius: .25rem;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .missing-badge {
+            background-color: #dc3545;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-left: 8px;
+        }
+
+        .detail-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: flex-start;
+        }
+        .detail-icon {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+        .detail-icon.text-success { color: #28a745; }
+        .detail-icon.text-danger { color: #dc3545; }
+        .detail-content {
+            flex: 1;
+        }
+        .detail-label {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-bottom: 2px;
+        }
+        .detail-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .detail-sub {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+        .config-link {
+            color: #007bff;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .config-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-approve {
+            background-color: #28a745;
+            border: none;
+            padding: 10px 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+        .btn-approve:hover {
+            background-color: #218838;
+        }
+        .btn-back {
+            background-color: #9E9E9E;
+            border: none;
+            padding: 10px 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+        .btn-back:hover {
+            background-color: #827f7f;
+        }
+
+        .form-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Modal de sucesso */
+        .modal-success {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-success-content {
+            background-color: #fff;
+            border-radius: .25rem;
+            padding: 40px 60px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            animation: fadeInUp 0.3s ease;
+        }
+        .modal-success-content .check-circle {
+            width: 70px;
+            height: 70px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+        .modal-success-content .check-circle i {
+            font-size: 40px;
+            color: white;
+        }
+        .modal-success-content h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Visualizador PDF */
+        .pdf-viewer {
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+            min-height: 600px;
+        }
+        .pdf-toolbar {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .pdf-frame {
+            height: 570px;
+        }
+        .pdf-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 0 0 .25rem .25rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topNav">
+    <div class="wrapper">
+        <div class="userNav">
+            <ul>
+                <li><span><strong>Demo</strong></span></li>
+                <li><span><strong>99999 | Demonstração</strong></span></li>
+                <li><a href="#"><i class="fas fa-user"></i><span class="ml-1">GUILHERME FARIAS MACIEL RIBEIRO</span></a></li>
+                <li><a href="2.html"><i class="fas fa-reply"></i><span class="ml-1">Voltar para Fila</span></a></li>
+                <li><a href="#"><i class="fas fa-share"></i><span class="ml-1">Logout</span></a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="container-fluid pt-2">
+    <!-- Card de informações do fluxo -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <label class="mb-0">Fluxo: </label> <span>Revisão antes de salvar</span>
+                <label class="mb-0 ml-2">| Garantia de Qualidade</label>
+                <label class="mb-0 ml-2">| Revisor: </label> <span>GUILHERME FARIAS MACIEL RIBEIRO</span>
+            </h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Lado Esquerdo: Painel de Visualização do Documento -->
+        <div class="col-md-6 pb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-file-pdf mr-2"></i> Visualizador de Documento
+                </div>
+                <div class="card-body p-0">
+                    <div class="pdf-viewer">
+                        <div class="pdf-toolbar">
+                            <span class="small"><i class="fas fa-file mr-1"></i> decreto_4587_2026.pdf</span>
+                        </div>
+                        <div class="pdf-frame">
+                            <iframe src="https://drive.google.com/viewerng/viewer?embedded=true&url=1.pdf" id="pdfFrame"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lado Direito: Painel de Revisão -->
+        <div class="col-md-6 pb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <!-- Cabeçalho do documento -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5 class="mb-0">decreto_4587_2026.pdf</h5>
+                            <span class="badge-tipo mt-1 d-inline-block">Decreto</span>
+                        </div>
+                    </div>
+
+                    <!-- Campos extraídos pela IA -->
+                    <div class="summary-card">
+                        <div class="info-row">
+                            <span class="info-label">Nº Decreto</span>
+                            <span class="info-value">4587/2026</span>
+                            <span class="confidence-badge high info-confidence">97%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Data de Publicação</span>
+                            <span class="info-value">2026-03-15</span>
+                            <span class="confidence-badge high info-confidence">99%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Órgão Emissor</span>
+                            <span class="info-value">Governo do Distrito Federal</span>
+                            <span class="confidence-badge high info-confidence">95%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Assunto</span>
+                            <span class="info-value">Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.</span>
+                            <span class="confidence-badge medium info-confidence">88%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Esfera</span>
+                            <span class="info-value">Distrital</span>
+                            <span class="confidence-badge high info-confidence">99%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Situação</span>
+                            <span class="info-value">Vigente</span>
+                            <span class="confidence-badge high info-confidence">92%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Diário Oficial</span>
+                            <span class="info-value">Diário Oficial do Distrito Federal (DODF)</span>
+                            <span class="confidence-badge high info-confidence">94%</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Página D.O.</span>
+                            <span class="info-value">12</span>
+                            <span class="confidence-badge low info-confidence">78%</span>
+                        </div>
+                    </div>
+
+                    <!-- Resumo de confiança -->
+                    <div class="small text-muted mb-3">
+                        <i class="fas fa-chart-line mr-1"></i> Resumo de confiança da IA: 
+                        Nº Decreto: 97% | Data de Publicação: 99% | Órgão Emissor: 95% | Assunto: 88% | 
+                        Esfera: 99% | Situação: 92% | Diário Oficial: 94% | Página D.O.: 78%
+                    </div>
+
+                    <!-- Alerta de campos ausentes -->
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center justify-content-between" style="cursor: pointer;" id="btnDetalhar">
+                            <span>
+                                <strong>Decreto 10.278/2020</strong>
+                                <span class="missing-badge">5 campos ausentes</span>
+                            </span>
+                            <i class="fas fa-chevron-down" id="chevronIcon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Detalhamento dos campos -->
+                    <div id="detalhamento" style="display: none;">
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Assunto → assunto</div>
+                                <div class="detail-value">Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Autor / Emitente → orgao</div>
+                                <div class="detail-value">Governo do Distrito Federal</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Data e Local de Digitalização</div>
+                                <div class="detail-value">Preenchido automaticamente pelo sistema</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Identificador Único → numero</div>
+                                <div class="detail-value">4587/2026</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Responsável pela Digitalização</div>
+                                <div class="detail-value">Preenchido automaticamente pelo sistema</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Título → assunto</div>
+                                <div class="detail-value">Dispõe sobre a reorganização administrativa da Secretaria de Saúde do Distrito Federal e dá outras providências.</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Tipo Documental</div>
+                                <div class="detail-value">não mapeado</div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Hash (Integridade)</div>
+                                <div class="detail-value">Preenchido automaticamente pelo sistema</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Classe</div>
+                                <div class="detail-value">não mapeado</div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-success"><i class="fas fa-check-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Data do Documento Original → data_pub</div>
+                                <div class="detail-value">2026-03-15</div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Destinação Prevista</div>
+                                <div class="detail-value">não mapeado</div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Gênero Documental</div>
+                                <div class="detail-value">não mapeado</div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-danger"><i class="fas fa-times-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Prazo de Guarda</div>
+                                <div class="detail-value">não mapeado</div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-icon text-muted"><i class="fas fa-info-circle"></i></div>
+                            <div class="detail-content">
+                                <div class="detail-label">Entidade pública — 13 campos exigidos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões -->
+                    <div class="form-footer">
+                        <button class="btn-back" onclick="window.location.href='4.html'">Voltar</button>
+                        <button class="btn-approve" id="btnAprovar">Aprovar e Finalizar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de sucesso -->
+<div id="successModal" class="modal-success">
+    <div class="modal-success-content">
+        <div class="check-circle">
+            <i class="fas fa-check"></i>
+        </div>
+        <h4>Indexado com Sucesso!</h4>
+        <p>Documento revisado e finalizado com sucesso.</p>
+    </div>
+</div>
+
+<script>
+    // Toggle detalhamento
+    const btnDetalhar = document.getElementById('btnDetalhar');
+    const detalhamento = document.getElementById('detalhamento');
+    const chevronIcon = document.getElementById('chevronIcon');
+    let detalhado = false;
+
+    btnDetalhar.addEventListener('click', function() {
+        detalhado = !detalhado;
+        detalhamento.style.display = detalhado ? 'block' : 'none';
+        chevronIcon.className = detalhado ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    });
+
+    // Aprovar e finalizar
+    const btnAprovar = document.getElementById('btnAprovar');
+    const modal = document.getElementById('successModal');
+
+    btnAprovar.addEventListener('click', function() {
+        modal.style.display = 'flex';
+        setTimeout(function() {
+            modal.style.display = 'none';
+            window.location.href = '2.html';
+        }, 2000);
+    });
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>
