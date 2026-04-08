@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Docs - Fila de Indexação</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS DA NAVBAR (mantido do original) --- */
+        body {
+            background-color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 1rem;
+            color: #212529;
+            padding-top: 40px;
+            margin: 0;
+        }
+
+        .topNav {
+            background: #2c363f;
+            background-image: linear-gradient(to bottom, #3c4852, #212a31);
+            display: block;
+            color: #eeeeee;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            height: 34px;
+            border-bottom: 1px solid #1c262b;
+        }
+
+        .wrapper {
+            position: relative;
+            margin: 0 3%;
+        }
+
+        .userNav {
+            float: right;
+            font-size: 11px;
+        }
+
+        .userNav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            border-right: 1px solid #39454f;
+        }
+
+        .userNav ul li {
+            border-left: 1px solid #39454f;
+            border-right: 1px solid #1c262b;
+            display: flex;
+            align-items: center;
+            height: 34px;
+        }
+
+        .userNav ul li span, .userNav ul li a {
+            padding: 0 15px;
+            color: #eee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .userNav ul li a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        /* --- ESTILOS DO CONTEÚDO (mantido do padrão) --- */
+        .card {
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+        }
+
+        .table thead th {
+            background-color: #f8f9fa;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .btn-indexar {
+            background-color: #007bff;
+            border: none;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: .25rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-indexar:hover {
+            background-color: #0056b3;
+        }
+
+        .file-size {
+            font-size: 0.65rem;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .metric-card {
+            background: #fff;
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .metric-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c363f;
+            line-height: 1.2;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Estilo texto normal para Tipo e Págs */
+        .texto-normal {
+            font-size: 0.85rem;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topNav">
+    <div class="wrapper">
+        <div class="userNav">
+            <ul>
+                <li><span><strong>Demo</strong></span></li>
+                <li><span><strong>99999 | Demonstração</strong></span></li>
+                <li>
+                    <a href="#" title="Minha Conta">
+                        <i class="fas fa-user"></i>
+                        <span class="ml-1">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html" title="Voltar">
+                        <i class="fas fa-reply"></i>
+                        <span class="ml-1">Voltar para Home</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" title="Sair">
+                        <i class="fas fa-share"></i>
+                        <span class="ml-1">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="container-fluid pt-2">
+    <!-- Card de informações do fluxo (igual ao original) -->
+    <div class="card">
+        <div class="card-header" id="headingOne" role="tab">
+            <h5 class="mb-0">
+                <button class="btn btn-link" type="button" id="botao" style="text-decoration: none; color: #007bff; width: 100%; text-align: left;">
+                    <label class="mb-0">Fluxo: </label> <span id="titulo">Fila de Indexação por IA</span>
+                    <label class="mb-0 ml-2">| Indexador: </label> <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    <i class="fa fa-angle-double-down float-right"></i>
+                </button>
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="card-group">
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Total</label><br>
+                        <label class="font-weight-bold h4">8</label>
+                    </div>
+                </div>
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Pendentes</label><br>
+                        <label class="font-weight-bold h4">8</label>
+                    </div>
+                </div>
+                <div class="card bg-light">
+                    <div class="card-body text-center">
+                        <label class="font-weight-light">Indexados</label><br>
+                        <label class="font-weight-bold h4">0</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de documentos pendentes -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="fas fa-list mr-2"></i> Documentos pendentes para indexação
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-sm mb-0 w-100">
+                            <thead>
+                                <tr>
+                                    <th>Arquivo</th>
+                                    <th>Tipo</th>
+                                    <th>Págs</th>
+                                    <th width="100">Ação</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div><strong>decreto_4587_2026.pdf</strong></div>
+                                        <div class="file-size">234 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Decreto</td>
+                                    <td class="texto-normal">3p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>oficio_SEI_0341_2026.pdf</strong></div>
+                                        <div class="file-size">189 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Ofício</td>
+                                    <td class="texto-normal">2p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>portaria_0892_2026.pdf</strong></div>
+                                        <div class="file-size">145 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Portaria</td>
+                                    <td class="texto-normal">1p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>contrato_CT0045_2026.pdf</strong></div>
+                                        <div class="file-size">612 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Contrato</td>
+                                    <td class="texto-normal">8p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>decreto_4590_2026.pdf</strong></div>
+                                        <div class="file-size">198 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Decreto</td>
+                                    <td class="texto-normal">2p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>oficio_GAB_0120_2026.pdf</strong></div>
+                                        <div class="file-size">112 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Ofício</td>
+                                    <td class="texto-normal">1p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>resolucao_TC_0034_2026.pdf</strong></div>
+                                        <div class="file-size">445 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Resolução</td>
+                                    <td class="texto-normal">4p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div><strong>portaria_1104_2026.pdf</strong></div>
+                                        <div class="file-size">201 KB</div>
+                                    </td>
+                                    <td class="texto-normal">Portaria</td>
+                                    <td class="texto-normal">2p</td>
+                                    <td><button class="btn-indexar" onclick="window.location.href='4.html'">Indexar</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé com informações adicionais (opcional, mantendo estilo) -->
+    <div class="row mt-2 mb-4">
+        <div class="col-md-12 text-center text-muted small">
+            <i class="fas fa-info-circle"></i> Selecione um documento e clique em Indexar para iniciar o processo de indexação
+        </div>
+    </div>
+</div>
+
+<script>
+    // Mantido apenas para compatibilidade com estrutura original
+    function logout() {
+        alert("Logout realizado");
+    }
+</script>
+
+</body>
+</html>
