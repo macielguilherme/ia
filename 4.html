@@ -91,16 +91,17 @@
 
         /* Painel de visualização de documento */
         .document-viewer {
-            background-color: #1e293b;
+            background-color: #fff;
             border-radius: .25rem;
             min-height: 100%;
-            color: #e2e8f0;
+            color: #212529;
+            border: 1px solid #dee2e6;
         }
 
         .viewer-toolbar {
-            background-color: #0f172a;
+            background-color: #f8f9fa;
             padding: 10px 15px;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid #dee2e6;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -120,9 +121,9 @@
         }
 
         .btn-outline-light-custom {
-            color: #e2e8f0;
-            border: 1px solid #475569;
-            background: transparent;
+            color: #495057;
+            border: 1px solid #ced4da;
+            background: #fff;
             padding: 4px 12px;
             font-size: 0.75rem;
             border-radius: .25rem;
@@ -130,7 +131,7 @@
         }
 
         .btn-outline-light-custom:hover {
-            background-color: #334155;
+            background-color: #e9ecef;
         }
 
         /* Etapas de navegação */
@@ -283,11 +284,10 @@
             color: #007bff;
         }
 
-        /* Mensagem de confiança da IA */
+        /* Mensagem de confiança da IA - sem borda lateral */
         .ia-message {
             display: none;
             background-color: #e8f5e9;
-            border-left: 3px solid #28a745;
             padding: 6px 10px;
             border-radius: .25rem;
             margin-top: 5px;
@@ -434,7 +434,7 @@
                             </div>
                         </div>
                         <div class="viewer-content">
-                            <iframe src="1.pdf" id="pdfFrame"></iframe>
+                            <iframe src="https://drive.google.com/viewerng/viewer?embedded=true&url=1.pdf" id="pdfFrame"></iframe>
                         </div>
                     </div>
                 </div>
@@ -712,7 +712,7 @@
         }, 2000);
     });
     
-    // Abrir PDF
+    // Abrir PDF - usando o visualizador padrão do Google
     document.getElementById('btnAbrirPDF').addEventListener('click', function() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -721,7 +721,7 @@
             const file = e.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
-                document.getElementById('pdfFrame').src = url;
+                document.getElementById('pdfFrame').src = `https://drive.google.com/viewerng/viewer?embedded=true&url=${encodeURIComponent(url)}`;
             }
         };
         input.click();
