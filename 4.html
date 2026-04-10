@@ -75,6 +75,37 @@
             clear: both;
         }
 
+        /* Botão de configuração no header */
+        .btn-config-header {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: .25rem;
+            cursor: pointer;
+            margin-left: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-config-header:hover {
+            background-color: #0056b3;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         /* --- ESTILOS DO CONTEÚDO --- */
         .card {
             border: 1px solid rgba(0, 0, 0, .125);
@@ -426,12 +457,19 @@
     <div class="card">
         <div class="card-header" id="headingOne" role="tab">
             <h5 class="mb-0">
-                <button class="btn btn-link" type="button" id="botao" style="text-decoration: none; color: #007bff; width: 100%; text-align: left;">
-                    <label class="mb-0">Fluxo: </label> <span id="titulo">Indexação de Documento</span>
-                    <label class="mb-0 ml-2">| Indexador: </label> <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
-                    <label class="mb-0 ml-2">| Documento: </label> <span id="nomeDocumento">decreto_4587_2026.pdf</span>
-                    <i class="fa fa-angle-double-down float-right"></i>
-                </button>
+                <div class="header-content">
+                    <div class="header-left">
+                        <label class="mb-0">Fluxo: </label>
+                        <span id="titulo">Indexação de Documento</span>
+                        <label class="mb-0 ml-2">| Indexador: </label>
+                        <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                        <label class="mb-0 ml-2">| Documento: </label>
+                        <span id="nomeDocumento">decreto_4587_2026.pdf</span>
+                    </div>
+                    <button class="btn-config-header" onclick="window.location.href='config.html'">
+                        <i class="fas fa-cog"></i> Configuração
+                    </button>
+                </div>
             </h5>
         </div>
         <div class="card-body">
