@@ -75,6 +75,37 @@
             clear: both;
         }
 
+        /* Botão de configuração no header */
+        .btn-config-header {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: .25rem;
+            cursor: pointer;
+            margin-left: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-config-header:hover {
+            background-color: #0056b3;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
         /* --- ESTILOS DO CONTEÚDO --- */
         .card {
             border: 1px solid rgba(0, 0, 0, .125);
@@ -313,9 +344,16 @@
     <div class="card">
         <div class="card-header">
             <h5 class="mb-0">
-                <label class="mb-0">Fluxo: </label> <span>Revisão antes de salvar</span>
-                <label class="mb-0 ml-2">| Garantia de Qualidade</label>
-                <label class="mb-0 ml-2">| Revisor: </label> <span>GUILHERME FARIAS MACIEL RIBEIRO</span>
+                <div class="header-content">
+                    <div class="header-left">
+                        <label class="mb-0">Fluxo: </label> <span>Revisão antes de salvar</span>
+                        <label class="mb-0 ml-2">| Garantia de Qualidade</label>
+                        <label class="mb-0 ml-2">| Revisor: </label> <span>GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    </div>
+                    <button class="btn-config-header" onclick="window.location.href='config.html'">
+                        <i class="fas fa-cog"></i> Configuração
+                    </button>
+                </div>
             </h5>
         </div>
     </div>
@@ -463,7 +501,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Tipo Documental</div>
                                 <div class="detail-value">não mapeado</div>
-                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="window.location.href='config.html'">⚙ Configuração</span></div>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -478,7 +516,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Classe</div>
                                 <div class="detail-value">não mapeado</div>
-                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="window.location.href='config.html'">⚙ Configuração</span></div>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -493,7 +531,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Destinação Prevista</div>
                                 <div class="detail-value">não mapeado</div>
-                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="window.location.href='config.html'">⚙ Configuração</span></div>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -501,7 +539,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Gênero Documental</div>
                                 <div class="detail-value">não mapeado</div>
-                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="window.location.href='config.html'">⚙ Configuração</span></div>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -509,7 +547,7 @@
                             <div class="detail-content">
                                 <div class="detail-label">Prazo de Guarda</div>
                                 <div class="detail-value">não mapeado</div>
-                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="alert('Configuração de mapeamento')">⚙ Configuração</span></div>
+                                <div class="detail-sub">Configure o mapeamento em <span class="config-link" onclick="window.location.href='config.html'">⚙ Configuração</span></div>
                             </div>
                         </div>
                         <div class="detail-item">
