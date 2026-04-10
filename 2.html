@@ -139,10 +139,42 @@
             margin-top: 4px;
         }
 
-        /* Estilo texto normal para Tipo e Págs */
+        /* Estilo texto normal para Tipo e Páginas */
         .texto-normal {
             font-size: 0.85rem;
             color: #212529;
+        }
+
+        /* Botão de configuração no header - maior e centralizado */
+        .btn-config-header {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: .25rem;
+            cursor: pointer;
+            margin-left: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-config-header:hover {
+            background-color: #0056b3;
+        }
+
+        /* Header flex para alinhar os elementos */
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
     </style>
 </head>
@@ -183,11 +215,17 @@
     <div class="card">
         <div class="card-header" id="headingOne" role="tab">
             <h5 class="mb-0">
-                <button class="btn btn-link" type="button" id="botao" style="text-decoration: none; color: #007bff; width: 100%; text-align: left;">
-                    <label class="mb-0">Fluxo: </label> <span id="titulo">Fila de Indexação por IA</span>
-                    <label class="mb-0 ml-2">| Indexador: </label> <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
-                    <i class="fa fa-angle-double-down float-right"></i>
-                </button>
+                <div class="header-content">
+                    <div class="header-left">
+                        <label class="mb-0">Fluxo: </label>
+                        <span id="titulo">Fila de Indexação por IA</span>
+                        <label class="mb-0 ml-2">| Indexador: </label>
+                        <span id="indexador">GUILHERME FARIAS MACIEL RIBEIRO</span>
+                    </div>
+                    <button class="btn-config-header" onclick="window.location.href='config.html'">
+                        <i class="fas fa-cog"></i> Configuração
+                    </button>
+                </div>
             </h5>
         </div>
         <div class="card-body">
@@ -228,7 +266,7 @@
                                 <tr>
                                     <th>Arquivo</th>
                                     <th>Tipo</th>
-                                    <th>Págs</th>
+                                    <th>Páginas</th>
                                     <th width="100">Ação</th>
                                 </tr>
                             </thead>
