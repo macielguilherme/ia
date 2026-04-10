@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Docs - Configuração</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        /* --- ESTILOS DA NAVBAR (mantido do original) --- */
+        body {
+            background-color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            font-size: 0.875rem;
+            color: #212529;
+            padding-top: 40px;
+            margin: 0;
+        }
+
+        .topNav {
+            background: #2c363f;
+            background-image: linear-gradient(to bottom, #3c4852, #212a31);
+            display: block;
+            color: #eeeeee;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            height: 34px;
+            border-bottom: 1px solid #1c262b;
+        }
+
+        .wrapper {
+            position: relative;
+            margin: 0 3%;
+        }
+
+        .userNav {
+            float: right;
+            font-size: 11px;
+        }
+
+        .userNav ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            display: flex;
+            border-right: 1px solid #39454f;
+        }
+
+        .userNav ul li {
+            border-left: 1px solid #39454f;
+            border-right: 1px solid #1c262b;
+            display: flex;
+            align-items: center;
+            height: 34px;
+        }
+
+        .userNav ul li span, .userNav ul li a {
+            padding: 0 15px;
+            color: #eee;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .userNav ul li a:hover {
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        /* --- ESTILOS DO CONTEÚDO (mantido do padrão) --- */
+        .card {
+            border: 1px solid rgba(0, 0, 0, .125);
+            border-radius: .25rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-header {
+            padding: .75rem 1.25rem;
+            background-color: rgba(0, 0, 0, .03);
+            border-bottom: 1px solid rgba(0, 0, 0, .125);
+            font-weight: 600;
+        }
+
+        .btn-config-header {
+            background-color: #007bff;
+            border: none;
+            color: #fff;
+            padding: 6px 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: .25rem;
+            cursor: pointer;
+            margin-left: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-config-header:hover {
+            background-color: #0056b3;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Layout de 4 colunas */
+        .config-layout {
+            display: flex;
+            min-height: calc(100vh - 180px);
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        /* Painel de tipos */
+        .panel-types {
+            width: 220px;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+        .panel-header {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6c757d;
+        }
+        .type-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .type-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .type-item:hover {
+            background-color: #f8f9fa;
+        }
+        .type-item.active {
+            background-color: #e8f4ff;
+        }
+        .type-item.active .type-name {
+            color: #007bff;
+            font-weight: 600;
+        }
+        .type-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .type-name {
+            flex: 1;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .type-count {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-right: 8px;
+        }
+        .type-delete {
+            color: #dee2e6;
+            font-size: 0.7rem;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s;
+        }
+        .type-item:hover .type-delete {
+            opacity: 1;
+        }
+        .type-delete:hover {
+            color: #dc3545;
+        }
+        .panel-footer {
+            padding: 12px;
+            border-top: 1px solid #dee2e6;
+            background: #fff;
+        }
+
+        /* Resize handle */
+        .resize-handle {
+            width: 6px;
+            background-color: #dee2e6;
+            cursor: col-resize;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .resize-handle:hover {
+            background-color: #007bff;
+        }
+
+        /* Painel de campos */
+        .panel-fields {
+            width: 260px;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            background: #f8f9fa;
+        }
+        .field-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .field-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .field-item:hover {
+            background-color: #fff;
+        }
+        .field-item.active {
+            background-color: #e8f4ff;
+        }
+        .field-item.active .field-label {
+            color: #007bff;
+        }
+        .field-move {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-right: 6px;
+        }
+        .field-move button {
+            background: none;
+            border: none;
+            color: #adb5bd;
+            font-size: 0.6rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+        .field-move button:hover:not(:disabled) {
+            color: #007bff;
+        }
+        .field-move button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .field-info {
+            flex: 1;
+        }
+        .field-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .field-required {
+            color: #dc3545;
+            font-size: 0.7rem;
+        }
+        .field-id {
+            font-size: 0.65rem;
+            color: #6c757d;
+            font-family: monospace;
+        }
+        .field-type-badge {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: .25rem;
+            background-color: #fff3e0;
+            border: 1px solid #fd7e14;
+            color: #fd7e14;
+            white-space: nowrap;
+        }
+
+        /* Painel de configuração do tipo */
+        .panel-config {
+            width: 300px;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+        .config-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        .config-section {
+            margin-bottom: 20px;
+        }
+        .config-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+        .entity-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .entity-btn {
+            flex: 1;
+            padding: 4px 8px;
+            font-size: 0.7rem;
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+            background: #fff;
+            cursor: pointer;
+        }
+        .entity-btn.active {
+            background: #007bff;
+            color: #fff;
+            border-color: #007bff;
+        }
+        .mapping-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .mapping-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .mapping-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .mapping-dot.system {
+            background: #fd7e14;
+        }
+        .mapping-dot.mapped {
+            background: #28a745;
+        }
+        .mapping-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .mapping-value {
+            font-size: 0.7rem;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: .25rem;
+            padding: 2px 6px;
+            color: #495057;
+            cursor: pointer;
+        }
+        .badge-system {
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: .25rem;
+            background-color: #fff3e0;
+            border: 1px solid #fd7e14;
+            color: #fd7e14;
+            white-space: nowrap;
+        }
+        .alert-info-custom {
+            background: #fff3e0;
+            border-left: 3px solid #fd7e14;
+            padding: 8px 10px;
+            font-size: 0.7rem;
+            color: #856404;
+            border-radius: .25rem;
+        }
+
+        /* Painel de edição */
+        .panel-edit {
+            flex: 1;
+            background: #fff;
+            overflow-y: auto;
+        }
+        .edit-content {
+            padding: 20px;
+        }
+        .edit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .btn-excluir-campo {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+        .btn-excluir-campo:hover {
+            background-color: #0056b3;
+        }
+        hr {
+            margin: 15px 0;
+        }
+        .form-group-sm {
+            margin-bottom: 12px;
+        }
+        .form-group-sm label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+        .form-control-sm-custom {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            width: 100%;
+        }
+        .form-check-custom {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .form-check-custom input {
+            margin: 0;
+        }
+        .help-text {
+            font-size: 0.65rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
+
+        /* Modal */
+        .modal-conteudo {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: .25rem;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .modal-conteudo i {
+            font-size: 60px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+        .modal-conteudo button {
+            padding: 10px 60px;
+            font-size: 16px;
+            font-weight: 700;
+            background-color: #28a745;
+            border: none;
+            border-radius: .25rem;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topNav">
+    <div class="wrapper">
+        <div class="userNav">
+            <ul>
+                <li><span><strong>Demo</strong></span></li>
+                <li><span><strong>99999 | Demonstração</strong></span></li>
+                <li><a href="#"><i class="fas fa-user"></i><span class="ml-1">GUILHERME FARIAS MACIEL RIBEIRO</span></a></li>
+                <li><a href="2.html"><i class="fas fa-reply"></i><span class="ml-1">Voltar para Fila</span></a></li>
+                <li><a href="#"><i class="fas fa-share"></i><span class="ml-1">Logout</span></a></li>
+            </ul>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<!-- Modal de sucesso -->
+<div id="modalConclusao" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
+    <div class="modal-conteudo">
+        <i class="fas fa-check-circle"></i>
+        <p>Configuração salva com sucesso!</p>
+        <button onclick="fecharModal()">OK</button>
+    </div>
+</div>
+
+<div class="container-fluid pt-2">
+    <!-- Card de informações do fluxo -->
+    <div class="card">
+        <div class="card-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <label class="mb-0">Fluxo: </label>
+                    <span>Configuração de Tipos Documentais</span>
+                    <label class="mb-0 ml-2">| Configurador: </label>
+                    <span>GUILHERME FARIAS MACIEL RIBEIRO</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout de 4 colunas redimensionáveis -->
+    <div class="config-layout">
+        <!-- Coluna 1: Tipos Documentais -->
+        <div class="panel-types" id="panelTypes">
+            <div class="panel-header">
+                TIPOS DOCUMENTAIS
+            </div>
+            <div class="type-list" id="typeList">
+                <div class="type-item active" data-tipo="decreto">
+                    <div class="d-flex align-items-center flex-1">
+                        <span class="type-color" style="background-color: #007bff;"></span>
+                        <span class="type-name">Decreto</span>
+                    </div>
+                    <span class="type-count">8</span>
+                    <span class="type-delete"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="type-item" data-tipo="oficio">
+                    <div class="d-flex align-items-center flex-1">
+                        <span class="type-color" style="background-color: #6f42c1;"></span>
+                        <span class="type-name">Ofício</span>
+                    </div>
+                    <span class="type-count">9</span>
+                    <span class="type-delete"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="type-item" data-tipo="portaria">
+                    <div class="d-flex align-items-center flex-1">
+                        <span class="type-color" style="background-color: #fd7e14;"></span>
+                        <span class="type-name">Portaria</span>
+                    </div>
+                    <span class="type-count">8</span>
+                    <span class="type-delete"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="type-item" data-tipo="contrato">
+                    <div class="d-flex align-items-center flex-1">
+                        <span class="type-color" style="background-color: #28a745;"></span>
+                        <span class="type-name">Contrato</span>
+                    </div>
+                    <span class="type-count">10</span>
+                    <span class="type-delete"><i class="fas fa-times"></i></span>
+                </div>
+                <div class="type-item" data-tipo="resolucao">
+                    <div class="d-flex align-items-center flex-1">
+                        <span class="type-color" style="background-color: #dc3545;"></span>
+                        <span class="type-name">Resolução</span>
+                    </div>
+                    <span class="type-count">6</span>
+                    <span class="type-delete"><i class="fas fa-times"></i></span>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-outline-primary btn-sm btn-block">+ Novo tipo</button>
+            </div>
+        </div>
+
+        <!-- Resize handle 1 -->
+        <div class="resize-handle" data-target="panelTypes"></div>
+
+        <!-- Coluna 2: Campos do tipo selecionado -->
+        <div class="panel-fields" id="panelFields">
+            <div class="panel-header">
+                CAMPOS (8)
+            </div>
+            <div class="field-list" id="fieldList">
+                <div class="field-item active" data-campo="numero">
+                    <div class="field-move">
+                        <button class="move-up" disabled><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Nº Decreto <span class="field-required">*</span></div>
+                        <div class="field-id">numero</div>
+                    </div>
+                    <span class="field-type-badge">masked</span>
+                </div>
+                <div class="field-item" data-campo="data_pub">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Data de Publicação <span class="field-required">*</span></div>
+                        <div class="field-id">data_pub</div>
+                    </div>
+                    <span class="field-type-badge">date</span>
+                </div>
+                <div class="field-item" data-campo="orgao">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Órgão Emissor <span class="field-required">*</span></div>
+                        <div class="field-id">orgao</div>
+                    </div>
+                    <span class="field-type-badge">autocomplete</span>
+                </div>
+                <div class="field-item" data-campo="assunto">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Assunto <span class="field-required">*</span></div>
+                        <div class="field-id">assunto</div>
+                    </div>
+                    <span class="field-type-badge">textarea</span>
+                </div>
+                <div class="field-item" data-campo="esfera">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Esfera <span class="field-required">*</span></div>
+                        <div class="field-id">esfera</div>
+                    </div>
+                    <span class="field-type-badge">select</span>
+                </div>
+                <div class="field-item" data-campo="situacao">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Situação <span class="field-required">*</span></div>
+                        <div class="field-id">situacao</div>
+                    </div>
+                    <span class="field-type-badge">select</span>
+                </div>
+                <div class="field-item" data-campo="diario_oficial">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down"><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Diário Oficial</div>
+                        <div class="field-id">diario_oficial</div>
+                    </div>
+                    <span class="field-type-badge">autocomplete</span>
+                </div>
+                <div class="field-item" data-campo="pagina">
+                    <div class="field-move">
+                        <button class="move-up"><i class="fas fa-chevron-up"></i></button>
+                        <button class="move-down" disabled><i class="fas fa-chevron-down"></i></button>
+                    </div>
+                    <div class="field-info">
+                        <div class="field-label">Página D.O.</div>
+                        <div class="field-id">pagina</div>
+                    </div>
+                    <span class="field-type-badge">number</span>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button class="btn btn-outline-primary btn-sm btn-block">+ Novo campo</button>
+            </div>
+        </div>
+
+        <!-- Resize handle 2 -->
+        <div class="resize-handle" data-target="panelFields"></div>
+
+        <!-- Coluna 3: Configuração do tipo -->
+        <div class="panel-config" id="panelConfig">
+            <div class="panel-header">
+                DECRETO 10.278/2020
+            </div>
+            <div class="config-scroll">
+                <div class="config-section">
+                    <div class="config-label">Exigência de conformidade</div>
+                    <div class="form-check-custom">
+                        <input type="checkbox" id="exigeConformidade" checked>
+                        <label for="exigeConformidade" class="mb-0" style="font-size: 0.8rem;">Exige conformidade com o decreto</label>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <div class="config-label">Tipo de entidade</div>
+                    <div class="entity-buttons">
+                        <button class="entity-btn active" data-entidade="publica">Pública (13)</button>
+                        <button class="entity-btn" data-entidade="privada">Privada (8)</button>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <div class="config-label">Mapeamento de campos</div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot mapped" style="background: #28a745;"></span>
+                            <span class="mapping-label">Assunto</span>
+                        </div>
+                        <select class="mapping-value">
+                            <option>— mapear —</option>
+                            <option>Nº Decreto</option>
+                            <option>Data de Publicação</option>
+                            <option>Órgão Emissor</option>
+                            <option selected>Assunto</option>
+                            <option>Esfera</option>
+                            <option>Situação</option>
+                            <option>Diário Oficial</option>
+                            <option>Página D.O.</option>
+                        </select>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot mapped" style="background: #28a745;"></span>
+                            <span class="mapping-label">Autor / Emitente</span>
+                        </div>
+                        <select class="mapping-value">
+                            <option>— mapear —</option>
+                            <option>Nº Decreto</option>
+                            <option>Data de Publicação</option>
+                            <option selected>Órgão Emissor</option>
+                            <option>Assunto</option>
+                            <option>Esfera</option>
+                            <option>Situação</option>
+                            <option>Diário Oficial</option>
+                            <option>Página D.O.</option>
+                        </select>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot system" style="background: #fd7e14;"></span>
+                            <span class="mapping-label">Data e Local de Digitalização</span>
+                        </div>
+                        <span class="badge-system">{data-hora-digitalização}</span>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot mapped" style="background: #28a745;"></span>
+                            <span class="mapping-label">Identificador Único</span>
+                        </div>
+                        <select class="mapping-value">
+                            <option>— mapear —</option>
+                            <option selected>Nº Decreto</option>
+                            <option>Data de Publicação</option>
+                            <option>Órgão Emissor</option>
+                            <option>Assunto</option>
+                            <option>Esfera</option>
+                            <option>Situação</option>
+                            <option>Diário Oficial</option>
+                            <option>Página D.O.</option>
+                        </select>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot system" style="background: #fd7e14;"></span>
+                            <span class="mapping-label">Responsável pela Digitalização</span>
+                        </div>
+                        <span class="badge-system">{usuário}</span>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot mapped" style="background: #28a745;"></span>
+                            <span class="mapping-label">Título</span>
+                        </div>
+                        <select class="mapping-value">
+                            <option>— mapear —</option>
+                            <option>Nº Decreto</option>
+                            <option>Data de Publicação</option>
+                            <option>Órgão Emissor</option>
+                            <option selected>Assunto</option>
+                            <option>Esfera</option>
+                            <option>Situação</option>
+                            <option>Diário Oficial</option>
+                            <option>Página D.O.</option>
+                        </select>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot" style="background: #dee2e6;"></span>
+                            <span class="mapping-label text-muted">Tipo Documental</span>
+                        </div>
+                        <select class="mapping-value">
+                            <option selected>— mapear —</option>
+                            <option>Nº Decreto</option>
+                            <option>Data de Publicação</option>
+                            <option>Órgão Emissor</option>
+                            <option>Assunto</option>
+                            <option>Esfera</option>
+                            <option>Situação</option>
+                            <option>Diário Oficial</option>
+                            <option>Página D.O.</option>
+                        </select>
+                    </div>
+                    <div class="mapping-row">
+                        <div class="mapping-left">
+                            <span class="mapping-dot system" style="background: #fd7e14;"></span>
+                            <span class="mapping-label">Hash (Integridade)</span>
+                        </div>
+                        <span class="badge-system">{hash-sha256}</span>
+                    </div>
+                </div>
+
+                <div class="alert-info-custom">
+                    Variáveis do sistema — campos marcados em laranja são preenchidos automaticamente pelo sistema no momento da digitalização.
+                </div>
+            </div>
+        </div>
+
+        <!-- Resize handle 3 -->
+        <div class="resize-handle" data-target="panelConfig"></div>
+
+        <!-- Coluna 4: Edição do campo -->
+        <div class="panel-edit" id="panelEdit">
+            <div class="edit-content">
+                <div class="edit-header">
+                    <h6 class="mb-0 font-weight-bold">Editar campo</h6>
+                    <div>
+                        <span class="field-type-badge" id="currentFieldType">masked</span>
+                        <button class="btn-excluir-campo ml-2">Excluir campo</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group-sm">
+                    <label>ID do campo</label>
+                    <input type="text" class="form-control-sm-custom" value="numero" style="font-family: monospace;">
+                    <div class="help-text">Identificador único (snake_case). Não altere após criar documentos.</div>
+                </div>
+                <div class="form-group-sm">
+                    <label>Label (rótulo)</label>
+                    <input type="text" class="form-control-sm-custom" value="Nº Decreto">
+                </div>
+                <div class="form-group-sm">
+                    <label>Tipo de campo</label>
+                    <select class="form-control-sm-custom" id="fieldTypeSelect">
+                        <option>Texto livre</option>
+                        <option>Data</option>
+                        <option>Número</option>
+                        <option>Lista (select)</option>
+                        <option>Autocomplete (fuzzy)</option>
+                        <option selected>Máscara (masked)</option>
+                        <option>Expressão regular</option>
+                        <option>Moeda (R$)</option>
+                        <option>CNPJ</option>
+                        <option>Área de texto</option>
+                    </select>
+                </div>
+                <div class="form-check-custom">
+                    <input type="checkbox" id="requiredField" checked>
+                    <label for="requiredField" class="mb-0" style="font-size: 0.8rem;">Campo obrigatório</label>
+                </div>
+                <div class="form-group-sm">
+                    <label>Máscara</label>
+                    <input type="text" class="form-control-sm-custom" value="9999/9999" style="font-family: monospace;">
+                    <div class="help-text">Use 9 para dígito numérico. Ex: 9999/9999</div>
+                </div>
+                <div class="form-group-sm">
+                    <label>Placeholder</label>
+                    <input type="text" class="form-control-sm-custom" value="0000/0000" style="font-family: monospace;">
+                </div>
+                <hr>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <label>Linha início</label>
+                        <input type="number" class="form-control-sm-custom" value="2">
+                    </div>
+                    <div class="form-group col-6">
+                        <label>Linha fim</label>
+                        <input type="number" class="form-control-sm-custom" value="2">
+                    </div>
+                </div>
+                <div class="help-text mb-3">Linha(s) do conteúdo mock onde este campo aparece. O viewer fará zoom ao focar o campo.</div>
+                <div class="form-group-sm">
+                    <label>Valor padrão</label>
+                    <input type="text" class="form-control-sm-custom" placeholder="Opcional">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra inferior de ações -->
+    <div class="card mt-2">
+        <div class="card-body py-2 d-flex justify-content-between align-items-center">
+            <div class="small text-warning">
+                Alterações não salvas
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary btn-sm px-3 mr-2">Descartar</button>
+                <button class="btn btn-primary btn-sm px-4" id="btnSalvar">Salvar configuração</button>
+                <button class="btn btn-outline-secondary btn-sm ml-2 px-3">Restaurar padrões</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Redimensionamento de colunas
+    let isResizing = false;
+    let currentHandle = null;
+    let startX = 0;
+    let startWidth = 0;
+
+    document.querySelectorAll('.resize-handle').forEach(handle => {
+        handle.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            currentHandle = this;
+            startX = e.clientX;
+            const targetId = this.getAttribute('data-target');
+            const target = document.getElementById(targetId);
+            startWidth = target.offsetWidth;
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        });
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isResizing) return;
+        const dx = e.clientX - startX;
+        const targetId = currentHandle.getAttribute('data-target');
+        const target = document.getElementById(targetId);
+        let newWidth = startWidth + dx;
+        if (newWidth < 150) newWidth = 150;
+        if (newWidth > 500) newWidth = 500;
+        target.style.width = newWidth + 'px';
+    });
+
+    document.addEventListener('mouseup', function() {
+        isResizing = false;
+        document.body.style.cursor = '';
+    });
+
+    // Seleção de tipo
+    document.querySelectorAll('.type-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.classList.contains('type-delete') || e.target.closest('.type-delete')) return;
+            document.querySelectorAll('.type-item').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Seleção de campo
+    document.querySelectorAll('.field-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.closest('.move-up') || e.target.closest('.move-down')) return;
+            document.querySelectorAll('.field-item').forEach(f => f.classList.remove('active'));
+            this.classList.add('active');
+            const typeBadge = this.querySelector('.field-type-badge')?.innerText || 'text';
+            document.getElementById('currentFieldType').innerText = typeBadge;
+        });
+    });
+
+    // Movimentação de campos
+    function updateMoveButtons() {
+        const items = document.querySelectorAll('.field-item');
+        items.forEach((item, index) => {
+            const upBtn = item.querySelector('.move-up');
+            const downBtn = item.querySelector('.move-down');
+            if (upBtn) upBtn.disabled = index === 0;
+            if (downBtn) downBtn.disabled = index === items.length - 1;
+        });
+    }
+
+    document.querySelectorAll('.move-up').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const item = this.closest('.field-item');
+            const prev = item.previousElementSibling;
+            if (prev && prev.classList.contains('field-item')) {
+                item.parentNode.insertBefore(item, prev);
+                updateMoveButtons();
+            }
+        });
+    });
+
+    document.querySelectorAll('.move-down').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const item = this.closest('.field-item');
+            const next = item.nextElementSibling;
+            if (next && next.classList.contains('field-item')) {
+                item.parentNode.insertBefore(next, item);
+                updateMoveButtons();
+            }
+        });
+    });
+
+    // Botões de entidade
+    document.querySelectorAll('.entity-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.entity-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Tipo de campo
+    document.getElementById('fieldTypeSelect').addEventListener('change', function() {
+        document.getElementById('currentFieldType').innerText = this.value;
+    });
+
+    // Modal
+    function fecharModal() {
+        document.getElementById('modalConclusao').style.display = 'none';
+    }
+
+    // Salvar
+    document.getElementById('btnSalvar').addEventListener('click', function() {
+        document.getElementById('modalConclusao').style.display = 'flex';
+        setTimeout(() => {
+            fecharModal();
+        }, 2000);
+    });
+
+    updateMoveButtons();
+</script>
+
+</body>
+</html>
